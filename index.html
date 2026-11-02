@@ -1,0 +1,3083 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة مدرسة الطيبة الثانوية الشاملة للبنين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --bg:#f3efe5;
+  --sidebar:#e8e2d3;
+  --panel:#fffdf7;
+  --panel2:#eee9dc;
+  --green:#78845b;
+  --green2:#596744;
+  --gold:#c3a66b;
+  --text:#343b2c;
+  --muted:#777966;
+  --border:#dcd5c4;
+  --danger:#b94e48;
+  --shadow:0 12px 35px rgba(67,75,48,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* LOGIN */
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at 15% 20%,#087f6840,transparent 35%),
+    radial-gradient(circle at 85% 80%,#e9bd6520,transparent 30%),
+    #080f18;
+}
+.login-box{
+  width:100%;
+  max-width:460px;
+  padding:38px;
+  background:#111f2deF;
+  border:1px solid var(--border);
+  border-radius:25px;
+  box-shadow:var(--shadow);
+  text-align:center;
+  animation:appear .7s ease;
+}
+.login-logo{
+  width:75px;height:75px;
+  display:grid;place-items:center;
+  margin:0 auto 18px;
+  border-radius:23px;
+  background:linear-gradient(135deg,var(--green2),var(--green));
+  color:white;font-size:38px;
+  box-shadow:0 10px 30px #10b98135;
+}
+.login-box h2{font-size:21px;margin:8px 0}
+.login-box p{color:var(--muted);font-size:14px}
+.role-buttons{display:grid;gap:13px;margin-top:28px}
+.role-buttons button{
+  width:100%;padding:15px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  color:white;background:var(--panel2);
+  transition:.25s;
+}
+.role-buttons button:hover{
+  transform:translateY(-3px);
+  border-color:var(--green);
+  background:#173b3a;
+}
+.teacher-form{text-align:right;margin-top:24px;display:none}
+.teacher-form label{display:block;margin:12px 0 6px;font-size:14px}
+.teacher-form input{
+  width:100%;padding:13px;
+  color:white;background:#0b1722;
+  border:1px solid var(--border);
+  border-radius:10px;outline:none;
+}
+.teacher-form input:focus{border-color:var(--green)}
+.login-message{color:#ff9292!important}
+.login-footer{margin-top:28px;font-size:12px!important}
+
+/* APP */
+#app{display:none;min-height:100vh}
+.sidebar{
+  position:fixed;right:0;top:0;bottom:0;
+  width:270px;background:var(--sidebar);
+  border-left:1px solid var(--border);
+  padding:22px 16px;z-index:20;
+  display:flex;flex-direction:column;
+  transition:.3s;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  padding:8px 7px 24px;
+  border-bottom:1px solid var(--border);
+}
+.brand-logo{
+  width:48px;height:48px;border-radius:15px;
+  display:grid;place-items:center;
+  color:#071b17;background:var(--gold);
+  font-size:27px;font-weight:900;
+}
+.brand h3{font-size:14px;margin:0;line-height:1.7}
+.brand small{font-size:11px;color:var(--muted)}
+.menu-title{
+  color:#647d8e;font-size:11px;
+  padding:23px 12px 8px;
+}
+.menu{display:grid;gap:6px}
+.menu button{
+  width:100%;display:flex;align-items:center;gap:13px;
+  border:0;background:transparent;color:#a8bac6;
+  padding:12px 14px;border-radius:11px;
+  text-align:right;transition:.2s;
+}
+.menu button .ico{font-size:19px;width:25px;text-align:center}
+.menu button:hover,.menu button.active{
+  background:linear-gradient(90deg,#10b98120,#10b98108);
+  color:#53dfb1;
+}
+.menu button.active{border-right:3px solid var(--green)}
+.sidebar-bottom{margin-top:auto}
+.logout{
+  width:100%;padding:12px;border-radius:10px;
+  border:1px solid #783c43;background:#341d27;
+  color:#ff9b9b;
+}
+.main-area{margin-right:270px;min-height:100vh}
+.topbar{
+  height:78px;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:#0d1925eF;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(15px);
+}
+.topbar h2{font-size:18px;margin:0}
+.topbar small{color:var(--muted)}
+.user-chip{
+  display:flex;align-items:center;gap:10px;
+  background:var(--panel);padding:8px 14px;
+  border:1px solid var(--border);border-radius:30px;
+  font-size:13px;
+}
+.avatar{
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  background:#087f68;color:white;
+}
+.menu-toggle{
+  display:none;background:var(--panel2);color:white;
+  border:1px solid var(--border);border-radius:9px;
+  padding:8px 12px;font-size:20px;
+}
+.content{padding:30px;max-width:1450px;margin:auto}
+.page{display:none;animation:appear .35s ease}
+.page.active{display:block}
+.welcome{
+  padding:34px;border-radius:22px;
+  background:
+    radial-gradient(circle at 85% 20%,#ffffff17,transparent 30%),
+    linear-gradient(120deg,#075344,#087f68 60%,#105b61);
+  position:relative;overflow:hidden;
+  margin-bottom:25px;
+}
+.welcome:after{
+  content:"✦";position:absolute;left:45px;top:5px;
+  font-size:130px;color:#ffffff12;
+}
+.welcome .tag{color:var(--gold);font-size:13px;font-weight:bold}
+.welcome h1{font-size:clamp(23px,3vw,34px);margin:8px 0}
+.welcome p{color:#d4eee7;max-width:650px;font-size:14px}
+.section-heading{margin:25px 0 15px}
+.section-heading h2{font-size:19px;margin:0}
+.section-heading p{font-size:13px;color:var(--muted);margin:4px 0}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:15px;margin-bottom:25px;
+}
+.stat{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:20px;
+  transition:.25s;
+}
+.stat:hover{transform:translateY(-4px);border-color:#168c70}
+.stat-icon{font-size:25px}
+.stat strong{display:block;font-size:24px;margin:8px 0 0}
+.stat small{color:var(--muted)}
+.cards{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.service-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:17px;padding:22px;
+  cursor:pointer;transition:.25s;
+  position:relative;overflow:hidden;
+}
+.service-card:before{
+  content:"";position:absolute;top:0;right:0;
+  width:4px;height:100%;background:var(--green);
+  transform:scaleY(0);transform-origin:top;transition:.25s;
+}
+.service-card:hover{
+  transform:translateY(-5px);
+  border-color:#168c70;box-shadow:var(--shadow);
+}
+.service-card:hover:before{transform:scaleY(1)}
+.service-icon{
+  width:52px;height:52px;display:grid;place-items:center;
+  background:#10b98118;border-radius:15px;font-size:25px;
+}
+.service-card h3{font-size:16px;margin:14px 0 5px}
+.service-card p{font-size:12px;color:var(--muted);margin:0;line-height:1.9}
+.panel{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:17px;padding:22px;margin-bottom:20px;
+}
+.panel h3{margin:0 0 15px;font-size:17px}
+.empty{
+  text-align:center;color:var(--muted);
+  padding:35px 10px;font-size:14px;
+}
+.post-item{
+  background:var(--panel2);border:1px solid var(--border);
+  border-right:4px solid var(--green);
+  border-radius:12px;padding:16px;margin:12px 0;
+}
+.post-item strong{display:block;font-size:15px;color:#7ee5c2}
+.post-item p{font-size:13px;white-space:pre-wrap;line-height:1.9}
+.post-item small{color:var(--muted)}
+.btn{
+  padding:10px 17px;border:0;border-radius:10px;
+  background:var(--green2);color:white;font-weight:bold;
+  transition:.2s;
+}
+.btn:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.btn.secondary{background:var(--panel2);border:1px solid var(--border)}
+.btn.gold{background:var(--gold);color:#17212b}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.field{margin-bottom:13px}
+.field.full{grid-column:1/-1}
+.field label{display:block;font-size:13px;margin-bottom:6px}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px;color:white;
+  background:#0b1722;border:1px solid var(--border);
+  border-radius:9px;outline:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green)}
+.field select option{background:#10202d}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px;text-align:center}
+th,td{padding:12px;border:1px solid var(--border);font-size:13px}
+th{background:#183044;color:#81dfc0}
+td input{
+  width:100%;min-width:90px;padding:8px;
+  color:white;background:#0b1722;
+  border:1px solid var(--border);border-radius:7px;text-align:center;
+}
+td input:disabled{background:transparent;border:0;color:white}
+.notice{padding:13px;border-bottom:1px solid var(--border);font-size:13px}
+.notice:last-child{border:0}
+.message{font-size:13px;color:#75e0b9;margin-top:10px}
+footer{
+  text-align:center;padding:25px;color:#718797;
+  font-size:12px;border-top:1px solid var(--border);
+  margin-top:35px;
+}
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:#0009;z-index:15;
+}
+@keyframes appear{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:1000px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:750px){
+  .sidebar{transform:translateX(100%)}
+  .sidebar.open{transform:translateX(0)}
+  .overlay.show{display:block}
+  .main-area{margin-right:0}
+  .menu-toggle{display:block}
+  .topbar{padding:0 16px;height:68px}
+  .content{padding:18px}
+  .welcome{padding:25px}
+  .cards{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+}
+@media(max-width:400px){
+  .stats{grid-template-columns:1fr 1fr;gap:9px}
+  .stat{padding:13px}
+  .stat strong{font-size:19px}
+  .user-chip{font-size:11px}
+  .login-box{padding:25px 19px}
+}
+
+/* ==============================
+   نظام الامتحانات المحوسبة
+============================== */
+
+.exam-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.exam-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+}
+
+.exam-card{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:19px;
+  transition:.2s;
+}
+
+.exam-card:hover{
+  border-color:var(--green);
+  transform:translateY(-3px);
+}
+
+.exam-card h3{
+  font-size:16px;
+  margin:0 0 10px;
+  color:#7ee5c2;
+}
+
+.exam-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:12px 0;
+}
+
+.exam-meta span{
+  background:#0b1722;
+  border:1px solid var(--border);
+  padding:5px 9px;
+  border-radius:7px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.exam-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:15px;
+}
+
+.exam-actions button{
+  flex:1;
+  min-width:90px;
+}
+
+.exam-form-box{
+  background:#0b1722;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:18px;
+  margin:15px 0;
+}
+
+.exam-question-editor{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:17px;
+  margin:15px 0;
+}
+
+.exam-question-editor input,
+.exam-question-editor textarea,
+.exam-question-editor select{
+  width:100%;
+  padding:11px;
+  margin:6px 0;
+  color:white;
+  background:#0b1722;
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+.exam-question-editor .option-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.exam-question-editor .option-row input[type="radio"]{
+  width:auto;
+  accent-color:var(--green);
+}
+
+.exam-question{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:22px;
+  margin:15px 0;
+}
+
+.exam-question h3{
+  font-size:16px;
+  line-height:1.9;
+}
+
+.exam-option{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:13px;
+  margin:9px 0;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--panel2);
+  cursor:pointer;
+}
+
+.exam-option:has(input:checked){
+  border-color:var(--green);
+  background:#10b98118;
+}
+
+.exam-option input{
+  accent-color:var(--green);
+  width:18px;
+  height:18px;
+}
+
+.exam-navigation{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:20px;
+}
+
+.exam-timer{
+  position:sticky;
+  top:88px;
+  z-index:5;
+  background:#102b2a;
+  border:1px solid var(--green);
+  border-radius:12px;
+  padding:13px 18px;
+  text-align:center;
+  color:#7ee5c2;
+  font-size:20px;
+  font-weight:900;
+}
+
+.exam-timer.warning{
+  color:#ff9b9b;
+  border-color:var(--danger);
+  background:#341d27;
+}
+
+.exam-progress{
+  height:8px;
+  background:#26394a;
+  border-radius:20px;
+  overflow:hidden;
+  margin:15px 0;
+}
+
+.exam-progress div{
+  height:100%;
+  background:var(--green);
+  width:0;
+  transition:.2s;
+}
+
+.exam-number-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:15px 0;
+}
+
+.exam-number-list button{
+  width:37px;
+  height:37px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--panel2);
+  color:white;
+}
+
+.exam-number-list button.answered{
+  border-color:var(--green);
+  background:#087f68;
+}
+
+.exam-result{
+  text-align:center;
+  padding:30px 15px;
+}
+
+.exam-result strong{
+  display:block;
+  color:var(--gold);
+  font-size:38px;
+  margin:15px 0;
+}
+
+.exam-status{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:7px;
+  font-size:12px;
+  background:#183044;
+  color:#81dfc0;
+}
+
+@media(max-width:600px){
+  .exam-card{padding:15px}
+  .exam-question{padding:15px}
+  .exam-timer{top:75px}
+}
+async function startStudentExam() {
+  const loginBox = document.getElementById("studentExamLogin");
+  const examId = loginBox.dataset.examId;
+  const studentName = document.getElementById("studentFullName").value.trim();
+  const password = document.getElementById("studentExamPassword").value.trim();
+
+  if (!examId) {
+    alert("لم يتم تحديد الامتحان.");
+    return;
+  }
+
+  if (!studentName || !password) {
+    alert("يرجى إدخال الاسم الرباعي وكلمة مرور الامتحان.");
+    return;
+  }
+
+  const startButton = loginBox.querySelector(".btn.gold");
+  startButton.disabled = true;
+  startButton.textContent = "جارٍ بدء الامتحان...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "start_computerized_exam",
+      {
+        p_exam_id: examId,
+        p_student_name: studentName,
+        p_password: password
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر بدء الامتحان.");
+    }
+
+    const questions = data.questions || [];
+
+    if (!data.attempt_id) {
+      throw new Error("لم تُرجع قاعدة البيانات رقم محاولة الامتحان.");
+    }
+
+    if (!questions.length) {
+      throw new Error("لم تُرجع قاعدة البيانات أسئلة الامتحان.");
+    }
+
+    currentStudentAttemptId = data.attempt_id;
+    currentStudentExam = data;
+
+    const questionsArea = document.getElementById("studentExamQuestions");
+    const activeExam = document.getElementById("studentActiveExam");
+
+    questionsArea.innerHTML = "";
+
+    document.getElementById("activeExamTitle").textContent =
+      data.title || "الامتحان المحوسب";
+
+    questions.forEach((question, index) => {
+      const item = document.createElement("div");
+      item.className = "exam-question";
+
+      const heading = document.createElement("h3");
+      heading.textContent =
+        `السؤال ${index + 1}: ${question.question_text}`;
+
+      item.appendChild(heading);
+
+      (question.options || []).forEach((option, optionIndex) => {
+        const label = document.createElement("label");
+        label.className = "exam-option";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = `question_${question.id}`;
+        radio.value = optionIndex;
+
+        radio.addEventListener("change", async () => {
+          try {
+            const { error } = await supabaseClient.rpc(
+              "save_computerized_exam_answer",
+              {
+                p_attempt_id: currentStudentAttemptId,
+                p_question_id: question.id,
+                p_selected_option: optionIndex
+              }
+            );
+
+            if (error) throw error;
+
+          } catch (err) {
+            console.error("خطأ حفظ الإجابة:", err);
+            alert("تعذر حفظ الإجابة. يرجى المحاولة مرة أخرى.");
+          }
+        });
+
+        label.append(radio, document.createTextNode(" " + option));
+        item.appendChild(label);
+      });
+
+      questionsArea.appendChild(item);
+    });
+
+    // إظهار منطقة الامتحان وإخفاء نافذة الدخول
+    loginBox.classList.add("hidden");
+    activeExam.classList.remove("hidden");
+
+    // إظهار زر التسليم
+    const finishButton = document.getElementById("finishStudentExamBtn");
+    finishButton.classList.remove("hidden");
+    finishButton.disabled = false;
+    finishButton.textContent = "تسليم الامتحان";
+
+    // بدء المؤقت إذا أعادت قاعدة البيانات المدة المتبقية
+    if (typeof data.remaining_minutes === "number") {
+      startStudentExamTimer(data.remaining_minutes);
+    }
+
+    // الانتقال إلى بداية الامتحان
+    activeExam.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  } catch (error) {
+    console.error("خطأ بدء الامتحان:", error);
+    alert("تعذر بدء الامتحان: " + error.message);
+
+  } finally {
+    startButton.disabled = false;
+    startButton.textContent = "ابدأ الامتحان";
+  }
+}
+/* لمسات التصميم البيج والزيتوني الحديثة */
+
+body {
+  background:
+    radial-gradient(circle at 10% 10%, #e8e2d3 0, transparent 35%),
+    var(--bg);
+}
+
+.sidebar {
+  box-shadow: -8px 0 30px rgba(67,75,48,.06);
+  backdrop-filter: blur(14px);
+}
+
+.brand-logo {
+  background: linear-gradient(135deg, #c9b98f, #a99a70);
+  color: #fffdf7;
+  box-shadow: 0 7px 18px rgba(89,103,68,.15);
+}
+
+.topbar {
+  background: rgba(255,253,247,.88);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 3px 18px rgba(67,75,48,.04);
+}
+
+.panel,
+.stat,
+.service-card,
+.login-box {
+  box-shadow: 0 8px 25px rgba(67,75,48,.06);
+  transition: transform .25s ease, box-shadow .25s ease,
+              border-color .25s ease;
+}
+
+.panel:hover,
+.stat:hover,
+.service-card:hover {
+  box-shadow: 0 14px 32px rgba(67,75,48,.12);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+.btn {
+  background: linear-gradient(135deg, #78845b, #596744);
+  box-shadow: 0 5px 13px rgba(89,103,68,.16);
+}
+
+.btn:hover {
+  box-shadow: 0 8px 20px rgba(89,103,68,.23);
+}
+
+.menu button {
+  transition: all .25s ease;
+}
+
+.menu button:hover,
+.menu button.active {
+  background: linear-gradient(90deg, #dce3cf, #eee9dc);
+  color: #4e603b;
+}
+
+.menu button.active {
+  border-right: 3px solid #78845b;
+}
+
+input,
+select,
+textarea {
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #89966a !important;
+  box-shadow: 0 0 0 3px rgba(120,132,91,.13);
+}
+
+.login-logo {
+  background: linear-gradient(135deg, #596744, #9aa47b);
+  box-shadow: 0 10px 25px rgba(89,103,68,.2);
+}
+
+.welcome {
+  background:
+    radial-gradient(circle at 85% 20%, #ffffff30, transparent 30%),
+    linear-gradient(120deg, #596744, #78845b 60%, #a49a70);
+}
+
+::selection {
+  background: #d5ddc4;
+  color: #343b2c;
+}
+/* إزالة الأزرق واعتماد التركوازي الغامق */
+
+:root {
+  --text: #245b55;
+  --muted: #71847b;
+  --border: #ded8c8;
+}
+
+body {
+  color: #245b55;
+}
+
+h1, h2, h3, h4, h5,
+label, strong, .section-heading {
+  color: #245b55;
+}
+
+.topbar,
+.user-chip,
+.menu-toggle {
+  background: #f8f5ec;
+  color: #245b55;
+}
+
+.sidebar {
+  background: #e9e4d6;
+}
+
+.panel,
+.stat,
+.service-card,
+.login-box {
+  background: #fffdf7;
+  border-color: #ded8c8;
+}
+
+.field input,
+.field select,
+.field textarea,
+.teacher-form input,
+td input {
+  background: #f5f1e7;
+  color: #245b55;
+  border-color: #d8d1bd;
+}
+
+.field select option {
+  background: #fffdf7;
+  color: #245b55;
+}
+
+th {
+  background: #dce4d5;
+  color: #245b55;
+}
+
+td {
+  color: #245b55;
+  border-color: #ded8c8;
+}
+
+td input:disabled {
+  color: #245b55;
+}
+
+.role-buttons button {
+  background: #eee9dc;
+  color: #245b55;
+  border-color: #ded8c8;
+}
+
+.role-buttons button:hover {
+  background: #dce4d5;
+  border-color: #78845b;
+}
+
+.post-item strong,
+.message {
+  color: #426e60;
+}
+
+.menu button {
+  color: #526b61;
+}
+
+.menu button:hover,
+.menu button.active {
+  background: #dce4d5;
+  color: #245b55;
+}
+
+footer {
+  color: #71847b;
+}
+/* توحيد ألوان النصوص وإلغاء البرتقالي */
+
+:root {
+  --gold: #526f65;
+  --text: #245b55;
+}
+
+body,
+h1, h2, h3, h4, h5,
+p, label, strong, small,
+.section-heading,
+.welcome h1,
+.welcome .tag {
+  color: #245b55;
+}
+
+/* النصوص الثانوية */
+.login-box p,
+.section-heading p,
+.stat small,
+.service-card p,
+footer {
+  color: #64796f;
+}
+
+/* منع الألوان البرتقالية في العناوين */
+.brand-logo,
+.btn.gold {
+  color: #245b55;
+}
+
+/* وضوح النصوص داخل الجداول */
+th, td {
+  color: #245b55;
+}
+
+/* وضوح رسائل المنصة */
+.message,
+.post-item strong {
+  color: #426e60;
+}
+/* اعتماد الأسود الغامق للنصوص */
+
+:root {
+  --text: #20231c;
+  --muted: #55594e;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+p, label, strong, small,
+.section-heading,
+.brand h3,
+.topbar h2,
+.user-chip,
+.menu button,
+table,
+th, td,
+.panel,
+.stat,
+.service-card,
+.login-box,
+footer {
+  color: #20231c;
+}
+
+/* النصوص داخل الحقول */
+input,
+select,
+textarea,
+.field input,
+.field select,
+.field textarea,
+.teacher-form input,
+td input {
+  color: #20231c !important;
+}
+
+/* النصوص الثانوية */
+.login-box p,
+.section-heading p,
+.stat small,
+.service-card p,
+footer,
+.brand small {
+  color: #55594e;
+}
+
+/* المحافظة على وضوح الأزرار */
+.btn,
+.logout {
+  color: #fffdf7;
+}
+
+.btn.gold {
+  color: #20231c;
+}
+/* الأشكال والأيقونات بالزيتي الفاتح */
+
+.brand-logo,
+.login-logo,
+.avatar,
+.service-icon,
+.stat-icon {
+  background: #dce4ce;
+  color: #596744;
+  box-shadow: 0 5px 15px rgba(89,103,68,.10);
+}
+
+.service-card:before {
+  background: #a5b58a;
+}
+
+.menu button .ico {
+  color: #788b61;
+}
+
+.menu button.active,
+.menu button:hover {
+  background: #e3e9d9;
+  color: #465638;
+}
+
+.menu button.active .ico,
+.menu button:hover .ico {
+  color: #596744;
+}
+
+.post-item {
+  border-right-color: #9baa7d;
+  background: #f0f1e7;
+}
+
+.welcome .tag {
+  color: #e8edda;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- صفحة الدخول -->
+<section class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">✦</div>
+    <h2>مدرسة الطيبة الثانوية الشاملة للبنين</h2>
+    <p>منصتكم التعليمية الرقمية</p>
+
+    <div class="role-buttons" id="roleButtons">
+      <button onclick="enterStudent()">🎓 الدخول كطالب</button>
+      <button onclick="showTeacherLogin()">👨‍🏫 الدخول كمعلم</button>
+    </div>
+
+    <form class="teacher-form" id="teacherForm" onsubmit="teacherLogin(event)">
+      <label>البريد الإلكتروني</label>
+      <input id="teacherUsername" type="email" required autocomplete="username"
+             placeholder="البريد الإلكتروني للمعلم">
+      <label>كلمة المرور</label>
+      <input id="teacherPassword" type="password" required
+             autocomplete="current-password" placeholder="كلمة المرور">
+      <button class="btn" type="submit" style="width:100%;margin-top:18px">
+        تسجيل الدخول
+      </button>
+      <p id="loginMessage" class="login-message"></p>
+      <button class="btn secondary" type="button" onclick="backToRoles()">رجوع</button>
+    </form>
+
+    <p class="login-footer">تصميم وإعداد المعلم محمد الرواضيه</p>
+  </div>
+</section>
+
+<!-- التطبيق -->
+<div id="app">
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">✦</div>
+      <div>
+        <h3>مدرسة الطيبة الثانوية</h3>
+        <small>منصة التعليم الرقمية</small>
+      </div>
+    </div>
+
+    <div class="menu-title">القائمة الرئيسية</div>
+    <nav class="menu">
+      <button class="active" data-page="homePage" onclick="showPage('homePage',this)">
+        <span class="ico">⌂</span> الرئيسية
+      </button>
+      <button data-page="timetablePage" onclick="showPage('timetablePage',this)">
+        <span class="ico">📚</span> الجدول الدراسي
+      </button>
+      <button data-page="schedulePage" onclick="showPage('schedulePage',this)">
+        <span class="ico">📅</span> مواعيد الاختبارات
+      </button>
+      <button data-page="homeworkPage" onclick="showPage('homeworkPage',this)">
+        <span class="ico">📝</span> الواجبات
+      </button>
+      <button data-page="examsPage" onclick="showPage('examsPage',this)">
+        <span class="ico">💻</span> الامتحانات المحوسبة
+      </button>
+      <button data-page="resultsPage" onclick="showPage('resultsPage',this)">
+        <span class="ico">📊</span> النتائج
+      </button>
+      <button data-page="announcementsPage" onclick="showPage('announcementsPage',this)">
+        <span class="ico">📢</span> الإعلانات
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="menu-title">الحساب</div>
+      <button class="logout" onclick="logout()">↪ تسجيل الخروج</button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:13px">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <div>
+          <h2 id="pageTitle">الرئيسية</h2>
+          <small>منصة مدرسة الطيبة الثانوية الشاملة للبنين</small>
+        </div>
+      </div>
+      <div class="user-chip">
+        <span class="avatar" id="userAvatar">ط</span>
+        <span id="userLabel">طالب</span>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- الرئيسية -->
+      <section class="page active" id="homePage">
+        <div class="welcome">
+          <div class="tag">✦ منصتكم التعليمية الرقمية</div>
+          <h1>أهلًا بك في منصة المدرسة</h1>
+          <p>كل ما تحتاجه في مكان واحد؛ تابع جدولك الدراسي وواجباتك ومواعيد اختباراتك ونتائجك بكل سهولة.</p>
+          <button class="btn gold" onclick="showPage('homeworkPage')">استكشف الواجبات ←</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="stat-icon">📚</div><strong id="homeworkCount">—</strong><small>الواجبات المنشورة</small></div>
+          <div class="stat"><div class="stat-icon">💻</div><strong id="examCount">—</strong><small>الامتحانات المنشورة</small></div>
+          <div class="stat"><div class="stat-icon">📅</div><strong id="dateCount">—</strong><small>مواعيد الاختبارات</small></div>
+          <div class="stat"><div class="stat-icon">📢</div><strong id="noticeCount">—</strong><small>الإعلانات</small></div>
+        </div>
+
+        <div class="section-heading">
+          <h2>الخدمات التعليمية</h2>
+          <p>اختر الخدمة التي تريد الوصول إليها</p>
+        </div>
+
+        <div class="cards">
+          <div class="service-card" onclick="showPage('timetablePage')">
+            <div class="service-icon">📚</div><h3>الجدول الدراسي</h3>
+            <p>الاطلاع على جدول الحصص الأسبوعي.</p>
+          </div>
+          <div class="service-card" onclick="showPage('schedulePage')">
+            <div class="service-icon">📅</div><h3>مواعيد الاختبارات</h3>
+            <p>تابع مواعيد الاختبارات حسب الصف والمادة.</p>
+          </div>
+          <div class="service-card" onclick="showPage('homeworkPage')">
+            <div class="service-icon">📝</div><h3>الواجبات المدرسية</h3>
+            <p>اطلع على الواجبات المنشورة من المعلمين.</p>
+          </div>
+          <div class="service-card" onclick="showPage('examsPage')">
+            <div class="service-icon">💻</div><h3>الامتحانات المحوسبة</h3>
+            <p>تابع الامتحانات الإلكترونية المنشورة.</p>
+          </div>
+          <div class="service-card" onclick="showPage('resultsPage')">
+            <div class="service-icon">📊</div><h3>النتائج</h3>
+            <p>مساحة مخصصة لعرض نتائج الطلبة مستقبلًا.</p>
+          </div>
+          <div class="service-card" onclick="showPage('announcementsPage')">
+            <div class="service-icon">📢</div><h3>الإعلانات</h3>
+            <p>آخر أخبار وإعلانات المدرسة.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- الجدول الدراسي -->
+<section class="page" id="timetablePage">
+  <div class="section-heading">
+    <h2>📚 الجدول الدراسي</h2>
+    <p>الجدول الأسبوعي للحصص الدراسية</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label>اختر الشعبة</label>
+      <select id="timetableClass">
+        <option value="">-- اختر الشعبة --</option>
+      </select>
+    </div>
+
+    <div id="timetableEditor" class="hidden"></div>
+
+    <div id="timetableDisplay">
+      <div class="empty">اختر الشعبة لعرض جدولها الدراسي.</div>
+    </div>
+  </div>
+</section>
+
+      <!-- مواعيد الاختبارات -->
+      <section class="page" id="schedulePage">
+        <div class="section-heading">
+          <h2>📅 مواعيد الاختبارات</h2>
+          <p>جدول الاختبارات حسب الصف والمادة</p>
+        </div>
+        <div class="panel">
+          <button class="btn" id="addExamDateButton" style="display:none;margin-bottom:18px">
+            + إضافة تاريخ جديد
+          </button>
+          <div class="table-wrap">
+            <table>
+              <thead id="examScheduleHead"></thead>
+              <tbody id="examScheduleBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- الواجبات -->
+      <section class="page" id="homeworkPage">
+        <div class="section-heading">
+          <h2>📝 الواجبات المدرسية</h2>
+          <p>الواجبات المنشورة من المعلمين</p>
+        </div>
+        <div class="panel" id="homeworkPosts"><div class="empty">جارٍ تحميل الواجبات...</div></div>
+      </section>
+
+      
+<!-- الامتحانات المحوسبة -->
+<section class="page" id="examsPage">
+<div id="examPosts" class="hidden"></div>
+  <div class="section-heading">
+    <h2>💻 الامتحانات المحوسبة</h2>
+    <p>نظام الاختبارات الإلكترونية لمنصة المدرسة</p>
+  </div>
+
+  <!-- واجهة الطالب -->
+  <div id="studentExamArea">
+
+    <div class="panel">
+      <h3>🎓 اختر صفك الدراسي</h3>
+      <div class="field">
+        <select id="studentExamGrade">
+          <option value="">-- اختر الصف --</option>
+          <option>الصف السابع</option>
+          <option>الصف الثامن</option>
+          <option>الصف التاسع</option>
+          <option>الصف العاشر</option>
+          <option>الصف الحادي عشر</option>
+          <option>الصف الثاني عشر - المسار الصحي</option>
+          <option>الصف الثاني عشر - المسار القانوني</option>
+        </select>
+      </div>
+      <button class="btn" onclick="loadComputerizedExams()">
+        عرض الامتحانات
+      </button>
+    </div>
+
+    <div class="panel">
+      <div id="studentExamList">
+        <div class="empty">اختر صفك لعرض الامتحانات المتاحة.</div>
+      </div>
+    </div>
+<!-- منطقة أداء الامتحان -->
+<div id="studentActiveExam" class="panel hidden">
+
+  <div class="exam-header">
+    <h3 id="activeExamTitle">الامتحان</h3>
+    <div id="studentExamTimer" class="exam-timer">
+      00:00
+    </div>
+  </div>
+
+  <div id="studentExamQuestions"></div>
+
+  <button
+    class="btn gold"
+    id="finishStudentExamBtn"
+    onclick="finishStudentExam()">
+    تسليم الامتحان
+  </button>
+
+</div>
+
+<!-- نافذة دخول الامتحان -->
+<div id="studentExamLogin" class="panel hidden">
+
+  <h3>🔐 دخول الامتحان</h3>
+
+  <div class="field">
+    <label>الاسم الرباعي</label>
+    <input
+      type="text"
+      id="studentFullName"
+      placeholder="اكتب اسمك الرباعي">
+  </div>
+
+  <div class="field">
+    <label>كلمة مرور الامتحان</label>
+    <input
+      type="password"
+      id="studentExamPassword"
+      placeholder="أدخل كلمة المرور">
+  </div>
+
+  <button class="btn gold" onclick="startStudentExam()">
+    ابدأ الامتحان
+  </button>
+
+  <button class="btn" onclick="closeStudentExamLogin()">
+    إلغاء
+  </button>
+
+</div>
+  </div>
+
+  <!-- مساحة المعلم -->
+  <div id="teacherExamArea" class="hidden">
+
+    <div class="panel">
+      <div class="exam-toolbar">
+        <div>
+          <h3>⚙️ إدارة الامتحانات</h3>
+          <p style="color:var(--muted);font-size:13px">
+            إنشاء الامتحانات وتعديلها وإدارة أسئلتها
+          </p>
+        </div>
+
+        <button class="btn gold" onclick="showCreateExamForm()">
+          + إنشاء امتحان جديد
+        </button>
+      </div>
+
+      <div id="createExamArea" class="hidden"></div>
+    </div>
+
+    <div class="panel">
+      <h3>📋 الامتحانات التي أنشأتها</h3>
+      <div id="teacherExamList">
+        <div class="empty">جارٍ تحميل الامتحانات...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- شاشة دخول الامتحان -->
+  <div id="examLoginArea" class="hidden"></div>
+
+  <!-- شاشة أداء الامتحان -->
+  <div id="examTakingArea" class="hidden"></div>
+
+  <!-- شاشة النتيجة -->
+  <div id="examResultArea" class="hidden"></div>
+
+</section>
+
+
+      <!-- النتائج -->
+      <section class="page" id="resultsPage">
+        <div class="section-heading">
+          <h2>📊 النتائج</h2>
+          <p>متابعة الأداء والتحصيل الدراسي</p>
+        </div>
+        <div class="panel">
+          <div class="empty">سيتم تفعيل عرض النتائج بعد تجهيز جدول النتائج وربطه بقاعدة البيانات.</div>
+        </div>
+      </section>
+
+      <!-- الإعلانات -->
+      <section class="page" id="announcementsPage">
+        <div class="section-heading">
+          <h2>📢 الإعلانات المدرسية</h2>
+          <p>آخر الإعلانات المنشورة من إدارة المدرسة والمعلمين</p>
+        </div>
+        <div class="panel" id="announcementPosts">
+          <div class="empty">جارٍ تحميل الإعلانات...</div>
+        </div>
+      </section>
+
+      <!-- لوحة المعلم -->
+      <section class="page" id="teacherPage">
+        <div class="section-heading">
+          <h2>👨‍🏫 لوحة تحكم المعلم</h2>
+          <p>إدارة المنشورات التعليمية</p>
+        </div>
+        <div class="panel">
+          <h3>نشر منشور جديد</h3>
+          <form id="postForm">
+            <div class="form-grid">
+              <div class="field">
+                <label>نوع المنشور</label>
+                <select id="postType" required>
+                  <option value="homework">واجب منزلي</option>
+                  <option value="exam">امتحان</option>
+                  <option value="announcement">إعلان مدرسي</option>
+                  <option value="schedule">جدول دراسي</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>الصف المستهدف</label>
+                <select id="postGrade">
+                  <option value="">جميع الصفوف</option>
+                  <option>الصف السابع</option>
+                  <option>الصف الثامن</option>
+                  <option>الصف التاسع</option>
+                  <option>الصف العاشر</option>
+                  <option>الصف الأول الثانوي</option>
+                  <option>الصف الثاني الثانوي</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>العنوان</label>
+                <input id="postTitle" required placeholder="عنوان المنشور">
+              </div>
+              <div class="field">
+                <label>المادة</label>
+                <input id="postSubject" placeholder="مثال: الكيمياء">
+              </div>
+              <div class="field">
+                <label>موعد التسليم أو الامتحان</label>
+                <input id="postDueDate" type="date">
+              </div>
+              <div class="field full">
+                <label>التفاصيل</label>
+                <textarea id="postContent" rows="5" required placeholder="اكتب تفاصيل المنشور هنا"></textarea>
+              </div>
+            </div>
+            <button class="btn" type="submit" id="publishButton">نشر المنشور</button>
+            <p class="message" id="postMessage"></p>
+          </form>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      مدرسة الطيبة الثانوية الشاملة للبنين — معًا نصنع مستقبلًا أفضل
+      <br><br>
+      تصميم وإعداد المعلم محمد الرواضيه
+      <br>
+      © <span id="year"></span> جميع الحقوق محفوظة
+    </footer>
+  </div>
+</div>
+
+<script>
+/* إعداد Supabase */
+const SUPABASE_URL = "https://codycvbuffnpinfxvzhp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_5WmwDZQYj1JL8uLzNzB4PA_jwcUJk4h";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+async function restoreSession() {
+  const userType = sessionStorage.getItem("userType");
+
+  if (userType === "student") {
+    enterStudent();
+    return;
+  }
+
+  if (userType === "teacher") {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error || !data.session) {
+      sessionStorage.removeItem("userType");
+      return;
+    }
+
+    const user = data.session.user;
+
+    const { data: profile, error: profileError } = await supabaseClient
+      .from("profiles")
+      .select("role, full_name")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError || !profile || profile.role !== "teacher") {
+      sessionStorage.removeItem("userType");
+      await supabaseClient.auth.signOut();
+      return;
+    }
+
+    currentUser = user;
+    isTeacher = true;
+    openApp(profile.full_name || "المعلم");
+  }
+}
+window.addEventListener("load", restoreSession);
+
+const GRADES = [
+  "الصف السابع","الصف الثامن","الصف التاسع",
+  "الصف العاشر","الصف الأول الثانوي","الصف الثاني الثانوي"
+];
+
+let currentUser = null;
+let isTeacher = false;
+/* إعدادات الجدول الدراسي */
+
+const TIMETABLE_CLASSES = [
+  "السابع أ",
+  "السابع ب",
+  "الثامن أ",
+  "الثامن ب",
+  "التاسع أ",
+  "التاسع ب",
+  "العاشر الأكاديمي أ",
+  "العاشر الأكاديمي ب",
+  "الحادي عشر الأكاديمي أ",
+  "الحادي عشر الأكاديمي ب",
+  "الثاني عشر الصحي + الهندسي",
+  "الثاني عشر القانون",
+  "العاشر ضيافة",
+  "الحادي عشر ضيافة",
+  "الثاني عشر ضيافة"
+];
+
+const TIMETABLE_DAYS = [
+  "الأحد",
+  "الاثنين",
+  "الثلاثاء",
+  "الأربعاء",
+  "الخميس"
+];
+
+let currentTimetable = [];
+let selectedTimetableClass = "";
+/* تحميل الجدول الدراسي */
+
+async function loadTimetable() {
+  const classSelect = document.getElementById("timetableClass");
+
+  if (!classSelect) return;
+
+  classSelect.innerHTML = '<option value="">-- اختر الشعبة --</option>';
+
+  TIMETABLE_CLASSES.forEach(className => {
+    const option = document.createElement("option");
+    option.value = className;
+    option.textContent = className;
+    classSelect.appendChild(option);
+  });
+
+  classSelect.onchange = async function () {
+    selectedTimetableClass = this.value;
+
+    if (!selectedTimetableClass) {
+      document.getElementById("timetableDisplay").innerHTML =
+        '<div class="empty">اختر الشعبة لعرض جدولها الدراسي.</div>';
+      return;
+    }
+
+    await displayTimetable(selectedTimetableClass);
+  };
+}
+
+/* عرض جدول الشعبة */
+
+async function displayTimetable(className) {
+  const display = document.getElementById("timetableDisplay");
+
+  display.innerHTML = '<div class="empty">جارٍ تحميل الجدول...</div>';
+
+  const { data, error } = await supabaseClient
+    .from("school_timetable")
+    .select("*")
+    .eq("class_name", className)
+    .order("day_number")
+    .order("period_number");
+
+  if (error) {
+    console.error(error);
+    display.innerHTML =
+      '<div class="empty">تعذر تحميل الجدول الدراسي.</div>';
+    return;
+  }
+
+  currentTimetable = data || [];
+
+  const table = document.createElement("table");
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>الحصة</th>
+        ${TIMETABLE_DAYS.map(day => `<th>${day}</th>`).join("")}
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+
+  const tbody = table.querySelector("tbody");
+
+  for (let period = 1; period <= 8; period++) {
+    if (period === 4) {
+      const breakRow = document.createElement("tr");
+      breakRow.innerHTML = `
+        <td colspan="6" style="text-align:center;background:#eee8d9;font-weight:bold">
+          ☕ الفرصة
+        </td>
+      `;
+      tbody.appendChild(breakRow);
+    }
+
+    const row = document.createElement("tr");
+
+    const periodCell = document.createElement("td");
+    periodCell.textContent = period;
+    row.appendChild(periodCell);
+
+    for (let day = 1; day <= 5; day++) {
+      const cell = document.createElement("td");
+
+      const lesson = currentTimetable.find(item =>
+        item.day_number === day &&
+        item.period_number === period
+      );
+
+      cell.textContent = lesson
+        ? `${lesson.subject_name}\n${lesson.teacher_name}`
+        : "—";
+
+      cell.style.whiteSpace = "pre-line";
+      row.appendChild(cell);
+    }
+
+    tbody.appendChild(row);
+  }
+
+  display.innerHTML = "";
+
+const wrapper = document.createElement("div");
+wrapper.className = "table-wrap";
+wrapper.appendChild(table);
+display.appendChild(wrapper);
+
+if (isTeacher) {
+  const editButton = document.createElement("button");
+  editButton.type = "button";
+  editButton.textContent = "✏️ تعديل الجدول";
+  editButton.className = "btn";
+  editButton.style.marginTop = "15px";
+
+  editButton.onclick = function () {
+
+  editTimetable(className);
+};
+
+  display.appendChild(editButton);
+}
+}
+/* تعديل الجدول الدراسي */
+
+function editTimetable(className) {
+
+  const editor = document.getElementById("timetableEditor");
+
+  editor.classList.remove("hidden");
+  editor.innerHTML = `
+    <h3>✏️ تعديل جدول: ${className}</h3>
+    <p>أدخل اسم المادة واسم المعلم لكل حصة.</p>
+    <div id="timetableEditContent"></div>
+    <button type="button" class="btn" onclick="saveTimetable()">
+      💾 حفظ الجدول
+    </button>
+  `;
+
+  const content = document.getElementById("timetableEditContent");
+
+  for (let period = 1; period <= 8; period++) {
+    if (period === 4) {
+      const breakTitle = document.createElement("h4");
+      breakTitle.textContent = "☕ الفرصة";
+      content.appendChild(breakTitle);
+    }
+
+    for (let day = 1; day <= 5; day++) {
+      const lesson = currentTimetable.find(item =>
+        item.day_number === day &&
+        item.period_number === period
+      );
+
+      const box = document.createElement("div");
+      box.className = "panel";
+      box.style.marginBottom = "10px";
+
+      const title = document.createElement("h4");
+      title.textContent = `${TIMETABLE_DAYS[day - 1]} - الحصة ${period}`;
+
+      const subject = document.createElement("input");
+      subject.type = "text";
+      subject.placeholder = "اسم المادة";
+      subject.value = lesson?.subject_name || "";
+      subject.id = `subject_${day}_${period}`;
+
+      const teacher = document.createElement("input");
+      teacher.type = "text";
+      teacher.placeholder = "اسم المعلم";
+      teacher.value = lesson?.teacher_name || "";
+      teacher.id = `teacher_${day}_${period}`;
+
+      box.appendChild(title);
+      box.appendChild(subject);
+      box.appendChild(teacher);
+      content.appendChild(box);
+    }
+  }
+}
+/* حفظ الجدول الدراسي */
+
+async function saveTimetable() {
+  if (!isTeacher || !selectedTimetableClass) {
+    alert("غير مسموح لك بتعديل الجدول.");
+    return;
+  }
+
+  const lessons = [];
+
+  for (let period = 1; period <= 8; period++) {
+    for (let day = 1; day <= 5; day++) {
+      const subject = document.getElementById(`subject_${day}_${period}`).value.trim();
+      const teacher = document.getElementById(`teacher_${day}_${period}`).value.trim();
+
+      if (!subject && !teacher) continue;
+
+      lessons.push({
+        class_name: selectedTimetableClass,
+        day_number: day,
+        period_number: period,
+        subject_name: subject,
+        teacher_name: teacher,
+        updated_by: currentUser.id,
+        updated_at: new Date().toISOString()
+      });
+    }
+  }
+
+  const { error: deleteError } = await supabaseClient
+    .from("school_timetable")
+    .delete()
+    .eq("class_name", selectedTimetableClass);
+
+  if (deleteError) {
+    console.error(deleteError);
+    alert("تعذر تحديث الجدول.");
+    return;
+  }
+
+  if (lessons.length > 0) {
+    const { error } = await supabaseClient
+      .from("school_timetable")
+      .insert(lessons);
+
+    if (error) {
+      console.error(error);
+      alert("حدث خطأ أثناء حفظ الحصص.");
+      return;
+    }
+  }
+
+  document.getElementById("timetableEditor").classList.add("hidden");
+
+  alert("تم حفظ الجدول بنجاح.");
+
+  await displayTimetable(selectedTimetableClass);
+}
+/* الدخول */
+function showTeacherLogin(){
+  document.getElementById("roleButtons").style.display="none";
+  document.getElementById("teacherForm").style.display="block";
+}
+function backToRoles(){
+  document.getElementById("teacherForm").style.display="none";
+  document.getElementById("roleButtons").style.display="grid";
+}
+function enterStudent(){
+  currentUser=null;
+  isTeacher=false;
+  sessionStorage.setItem("userType", "student");
+  openApp("طالب");
+}
+async function teacherLogin(event){
+  event.preventDefault();
+  const message=document.getElementById("loginMessage");
+  message.textContent="جارٍ التحقق من بيانات الدخول...";
+
+  const email=document.getElementById("teacherUsername").value.trim();
+  const password=document.getElementById("teacherPassword").value;
+
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){
+    message.textContent="البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+    return;
+  }
+
+  const {data:profile,error:profileError}=await supabaseClient
+    .from("profiles").select("role,full_name").eq("id",data.user.id).single();
+
+  if(profileError || !profile || profile.role!=="teacher"){
+    await supabaseClient.auth.signOut();
+    message.textContent="هذا الحساب غير مصرح له بدخول المعلمين.";
+    return;
+  }
+
+  currentUser=data.user;
+isTeacher=true;
+sessionStorage.setItem("userType", "teacher");
+openApp(profile.full_name || "المعلم");
+}
+
+function openApp(name){
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("userLabel").textContent=name;
+  document.getElementById("userAvatar").textContent=isTeacher?"م":"ط";
+
+  if(isTeacher){
+    const button=document.createElement("button");
+    button.innerHTML='<span class="ico">⚙️</span> لوحة المعلم';
+    button.onclick=()=>showPage("teacherPage",button);
+    button.dataset.page="teacherPage";
+    document.querySelector(".menu").appendChild(button);
+  }
+
+  const studentArea=document.getElementById("studentExamArea");
+  const teacherArea=document.getElementById("teacherExamArea");
+
+  if(studentArea) studentArea.classList.toggle("hidden",isTeacher);
+  if(teacherArea) teacherArea.classList.toggle("hidden",!isTeacher);
+
+  loadAll();
+
+    if(isTeacher){
+    loadTeacherExams();
+  }
+
+  const lastPage = sessionStorage.getItem("lastPage");
+  const allowedPages = [
+    "homePage",
+    "timetablePage",
+    "schedulePage",
+    "homeworkPage",
+    "examsPage",
+    "resultsPage",
+    "announcementsPage",
+    "teacherPage"
+  ];
+
+  if (allowedPages.includes(lastPage)) {
+    if (lastPage !== "teacherPage" || isTeacher) {
+      showPage(lastPage);
+    }
+  }
+}
+
+
+/* القائمة والتنقل */
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("overlay").classList.toggle("show");
+}
+function showPage(pageId,button){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const page=document.getElementById(pageId);
+  if(!page)return;
+  page.classList.add("active");
+sessionStorage.setItem("lastPage", pageId);
+if (pageId === "timetablePage") {
+  loadTimetable();
+}
+
+  document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
+  if(button)button.classList.add("active");
+  else{
+    const matching=document.querySelector('[data-page="'+pageId+'"]');
+    if(matching)matching.classList.add("active");
+  }
+
+  const titles={
+    homePage:"الرئيسية",timetablePage:"الجدول الدراسي",
+    schedulePage:"مواعيد الاختبارات",homeworkPage:"الواجبات",
+    examsPage:"الامتحانات المحوسبة",resultsPage:"النتائج",
+    announcementsPage:"الإعلانات",teacherPage:"لوحة تحكم المعلم"
+  };
+  document.getElementById("pageTitle").textContent=titles[pageId]||"المنصة";
+
+  if(window.innerWidth<=750){
+    document.getElementById("sidebar").classList.remove("open");
+    document.getElementById("overlay").classList.remove("show");
+  }
+}
+
+/* تحميل البيانات */
+async function loadAll(){
+  await Promise.all([
+    loadStudentPosts(),
+    loadExamSchedule()
+  ]);
+}
+
+async function loadTeacherExams() {
+  const box = document.getElementById("teacherExamList");
+
+  if (!box) return;
+
+  box.textContent = "جارٍ تحميل الامتحانات...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "get_teacher_computerized_exams"
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تحميل الامتحانات.");
+    }
+
+    const exams = data.exams || [];
+
+    box.innerHTML = "";
+
+    if (exams.length === 0) {
+      box.textContent = "لم تقم بإنشاء أي امتحان حتى الآن.";
+      return;
+    }
+
+    exams.forEach(exam => {
+      const card = document.createElement("div");
+      card.className = "exam-card";
+
+      const title = document.createElement("h3");
+      title.textContent = exam.title;
+
+      const details = document.createElement("p");
+      details.className = "exam-meta";
+      details.textContent =
+        `الصف: ${exam.grade} | المادة: ${exam.subject} | ` +
+        `المدة: ${exam.duration_minutes} دقيقة | ` +
+        `الأسئلة: ${exam.question_count}`;
+
+      const status = document.createElement("p");
+      status.className = "exam-status";
+      status.textContent = exam.published
+        ? "منشور للطلبة"
+        : "غير منشور";
+
+      const actions = document.createElement("div");
+      actions.className = "exam-actions";
+
+      const manageButton = document.createElement("button");
+      manageButton.className = "btn";
+      manageButton.textContent = "إدارة الأسئلة";
+      manageButton.onclick = () => openExamQuestions(exam.id);
+
+      actions.appendChild(manageButton);
+const resultsButton = document.createElement("button");
+resultsButton.className = "btn gold";
+resultsButton.textContent = "نتائج الطلاب";
+resultsButton.onclick = () => showTeacherExamResults(exam.id);
+
+actions.appendChild(resultsButton);
+
+// زر نشر أو إلغاء نشر الامتحان
+const publishButton = document.createElement("button");
+publishButton.className = "btn";
+publishButton.textContent = exam.published
+  ? "إلغاء النشر"
+  : "نشر الامتحان";
+
+publishButton.onclick = async () => {
+  const newStatus = !exam.published;
+
+  if (newStatus && Number(exam.question_count) === 0) {
+    alert("أضف سؤالاً واحداً على الأقل قبل نشر الامتحان.");
+    return;
+  }
+
+  const message = newStatus
+    ? "هل تريد نشر الامتحان للطلبة؟"
+    : "هل تريد إلغاء نشر الامتحان؟";
+
+  if (!confirm(message)) return;
+
+  publishButton.disabled = true;
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "set_computerized_exam_published",
+      {
+        p_exam_id: exam.id,
+        p_published: newStatus
+      }
+    );
+
+    if (error) throw error;
+    if (data && data.success === false) {
+      throw new Error(data.message || "تعذر تحديث حالة النشر.");
+    }
+
+    alert(newStatus ? "تم نشر الامتحان بنجاح." : "تم إلغاء نشر الامتحان.");
+    await loadTeacherExams();
+
+  } catch (error) {
+    console.error("خطأ في النشر:", error);
+    alert("حدث خطأ: " + error.message);
+    publishButton.disabled = false;
+  }
+};
+
+actions.appendChild(publishButton);
+
+// زر حذف الاختبار
+const deleteButton = document.createElement("button");
+deleteButton.className = "btn";
+deleteButton.style.background = "#b42318";
+deleteButton.style.color = "#ffffff";
+deleteButton.textContent = "حذف الاختبار";
+
+deleteButton.onclick = async () => {
+  const confirmed = confirm(
+    "تحذير: هل أنت متأكد من حذف هذا الاختبار؟\n\n" +
+    "سيتم حذف الأسئلة ومحاولات الطلاب وإجاباتهم ونتائجهم نهائياً.\n" +
+    "لا يمكن التراجع عن هذا الإجراء."
+  );
+
+  if (!confirmed) return;
+
+  deleteButton.disabled = true;
+  deleteButton.textContent = "جارٍ الحذف...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "delete_computerized_exam",
+      {
+        p_exam_id: exam.id
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر حذف الاختبار.");
+    }
+
+    alert("تم حذف الاختبار وجميع بياناته المرتبطة بنجاح.");
+
+    await loadTeacherExams();
+
+  } catch (error) {
+    console.error("خطأ حذف الاختبار:", error);
+    alert("حدث خطأ أثناء الحذف: " + error.message);
+
+    deleteButton.disabled = false;
+    deleteButton.textContent = "حذف الاختبار";
+  }
+};
+
+actions.appendChild(deleteButton);
+
+      card.append(title, details, status, actions);
+      box.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("خطأ تحميل الامتحانات:", error);
+    box.textContent = "حدث خطأ أثناء تحميل الامتحانات: " + error.message;
+  }
+}
+
+async function showTeacherExamResults(examId) {
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "get_teacher_exam_results",
+      { p_exam_id: examId }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تحميل النتائج.");
+    }
+
+    const results = data.results || [];
+
+    const oldBox = document.getElementById("teacherExamResults");
+    if (oldBox) oldBox.remove();
+
+    const box = document.createElement("div");
+    box.id = "teacherExamResults";
+    box.className = "panel";
+
+    const heading = document.createElement("h2");
+    heading.textContent = "نتائج الطلاب";
+    box.appendChild(heading);
+
+    if (results.length === 0) {
+      const empty = document.createElement("p");
+      empty.textContent = "لا توجد محاولات مسجلة لهذا الامتحان.";
+      box.appendChild(empty);
+    } else {
+      const table = document.createElement("table");
+      table.className = "results-table";
+
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      ["اسم الطالب", "العلامة", "العلامة الكلية", "الحالة", "تاريخ التسليم"]
+        .forEach(label => {
+          const th = document.createElement("th");
+          th.textContent = label;
+          headerRow.appendChild(th);
+        });
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      results.forEach(result => {
+        const tr = document.createElement("tr");
+
+        [
+          result.student_name,
+          result.score ?? "—",
+          result.total_marks ?? "—",
+          result.status,
+          result.submitted_at
+            ? new Date(result.submitted_at).toLocaleString("ar-JO")
+            : "لم يتم التسليم"
+        ].forEach(value => {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      box.appendChild(table);
+    }
+
+const exportButton = document.createElement("button");
+exportButton.className = "btn gold";
+exportButton.textContent = "تصدير النتائج إلى Excel";
+
+exportButton.onclick = () => {
+  if (results.length === 0) {
+    alert("لا توجد نتائج لتصديرها.");
+    return;
+  }
+
+  const headers = [
+    "اسم الطالب",
+    "العلامة",
+    "العلامة الكلية",
+    "الحالة",
+    "تاريخ بدء الامتحان",
+    "تاريخ التسليم"
+  ];
+
+  const rows = results.map(result => [
+    result.student_name,
+    result.score ?? "",
+    result.total_marks ?? "",
+    result.status,
+    result.started_at
+      ? new Date(result.started_at).toLocaleString("ar-JO")
+      : "",
+    result.submitted_at
+      ? new Date(result.submitted_at).toLocaleString("ar-JO")
+      : ""
+  ]);
+
+  const escapeCSV = value =>
+    '"' + String(value ?? "").replace(/"/g, '""') + '"';
+
+  const csvContent = [
+    headers,
+    ...rows
+  ].map(row => row.map(escapeCSV).join(",")).join("\r\n");
+
+  const blob = new Blob(
+    ["\uFEFF" + csvContent],
+    { type: "text/csv;charset=utf-8;" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "نتائج_الامتحان.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+};
+
+box.appendChild(exportButton);
+
+    const closeButton = document.createElement("button");
+    closeButton.className = "btn";
+    closeButton.textContent = "إغلاق النتائج";
+    closeButton.onclick = () => box.remove();
+    box.appendChild(closeButton);
+
+    const teacherList = document.getElementById("teacherExamList");
+    teacherList.parentElement.appendChild(box);
+
+    box.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  } catch (error) {
+    console.error("خطأ تحميل نتائج الامتحان:", error);
+    alert(error.message || "حدث خطأ أثناء تحميل النتائج.");
+  }
+}
+
+
+let currentStudentAttemptId = null;
+let currentStudentExam = null;
+let studentExamTimerInterval = null;
+
+function startStudentExamTimer(remainingMinutes) {
+  if (studentExamTimerInterval) {
+    clearInterval(studentExamTimerInterval);
+  }
+
+  let remainingSeconds = Math.max(
+    0,
+    Math.floor(Number(remainingMinutes) * 60)
+  );
+
+  const timer = document.getElementById("studentExamTimer");
+
+  function updateTimer() {
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+
+    timer.textContent =
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+
+    if (remainingSeconds <= 0) {
+      clearInterval(studentExamTimerInterval);
+      studentExamTimerInterval = null;
+
+      alert("انتهى وقت الامتحان، سيتم تسليم إجاباتك تلقائياً.");
+      finishStudentExam(true);
+      return;
+    }
+
+    remainingSeconds--;
+  }
+
+  updateTimer();
+
+  studentExamTimerInterval = setInterval(updateTimer, 1000);
+}
+
+async function startStudentExam() {
+  const loginBox = document.getElementById("studentExamLogin");
+  const examId = loginBox.dataset.examId;
+  const studentName = document.getElementById("studentFullName").value.trim();
+  const password = document.getElementById("studentExamPassword").value.trim();
+
+  if (!examId) {
+    alert("لم يتم تحديد الامتحان.");
+    return;
+  }
+
+  if (!studentName || !password) {
+    alert("يرجى إدخال الاسم الرباعي وكلمة مرور الامتحان.");
+    return;
+  }
+
+  const startButton = loginBox.querySelector(".btn.gold");
+  startButton.disabled = true;
+  startButton.textContent = "جارٍ بدء الامتحان...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "start_computerized_exam",
+      {
+        p_exam_id: examId,
+        p_student_name: studentName,
+        p_password: password
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر بدء الامتحان.");
+    }
+
+    console.log("بيانات بدء الامتحان:", data);
+
+    currentStudentAttemptId = data.attempt_id;
+    currentStudentExam = data;
+
+    loginBox.classList.add("hidden");
+
+const activeExam = document.getElementById("studentActiveExam");
+
+if (!activeExam) {
+  throw new Error("لم يتم العثور على واجهة الامتحان.");
+}
+
+activeExam.classList.remove("hidden");
+
+const questionsArea = document.getElementById("studentExamQuestions");
+
+if (!questionsArea) {
+  throw new Error("لم يتم العثور على مكان عرض أسئلة الامتحان.");
+}
+
+document.getElementById("activeExamTitle").textContent =
+  data.exam_title || "الامتحان المحوسب";
+
+questionsArea.innerHTML = "";
+
+   (data.questions || []).forEach((question, index) => {
+      const item = document.createElement("div");
+      item.className = "exam-question";
+
+      const heading = document.createElement("h3");
+      heading.textContent =
+        `السؤال ${index + 1}: ${question.question_text}`;
+
+      item.appendChild(heading);
+
+      (question.options || []).forEach((option, optionIndex) => {
+        const label = document.createElement("label");
+        label.className = "exam-option";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = `question_${question.id}`;
+        radio.value = optionIndex;
+
+        radio.addEventListener("change", async () => {
+
+          try {
+            const { error } = await supabaseClient.rpc(
+              "save_computerized_exam_answer",
+              {
+                p_attempt_id: currentStudentAttemptId,
+                p_question_id: question.id,
+                p_selected_option: optionIndex
+              }
+            );
+
+            if (error) throw error;
+
+          } catch (err) {
+            radio.disabled = false;
+            alert("تعذر حفظ الإجابة: " + err.message);
+          }
+        });
+
+        label.append(radio, document.createTextNode(" " + option));
+        item.appendChild(label);
+      });
+
+      questionsArea.appendChild(item);
+    });
+
+    document.getElementById("finishStudentExamBtn").classList.remove("hidden");
+
+    if (typeof data.remaining_minutes === "number") {
+      startStudentExamTimer(data.remaining_minutes);
+    }
+
+  } catch (error) {
+    console.error("خطأ بدء الامتحان:", error);
+    alert("تعذر بدء الامتحان: " + error.message);
+
+  } finally {
+    startButton.disabled = false;
+    startButton.textContent = "ابدأ الامتحان";
+  }
+}
+
+
+function closeStudentExamLogin() {
+  document.getElementById("studentExamLogin").classList.add("hidden");
+}
+
+async function finishStudentExam(automatic = false) {
+  if (!currentStudentAttemptId) {
+    alert("لا توجد محاولة امتحان نشطة.");
+    return;
+  }
+
+  if (!automatic && !confirm("هل أنت متأكد من تسليم الامتحان؟")) {
+    return;
+  }
+
+  const button = document.getElementById("finishStudentExamBtn");
+  button.disabled = true;
+  button.textContent = "جارٍ تسليم الامتحان...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "finish_computerized_exam",
+      {
+        p_attempt_id: currentStudentAttemptId
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تسليم الامتحان.");
+    }
+
+    if (studentExamTimerInterval) {
+      clearInterval(studentExamTimerInterval);
+      studentExamTimerInterval = null;
+    }
+
+    document.querySelectorAll(
+      "#studentExamQuestions input[type='radio']"
+    ).forEach(radio => {
+      radio.disabled = true;
+    });
+
+    document.getElementById("studentExamQuestions").innerHTML = `
+      <div class="exam-result">
+        <h3>تم تسليم الامتحان بنجاح</h3>
+        <strong>${data.score} من ${data.total_marks}</strong>
+        <p>نتمنى لك دوام التوفيق والنجاح.</p>
+      </div>
+    `;
+
+    button.classList.add("hidden");
+
+  } catch (error) {
+    console.error("خطأ تسليم الامتحان:", error);
+    alert("حدث خطأ أثناء التسليم: " + error.message);
+    button.disabled = false;
+    button.textContent = "تسليم الامتحان";
+  }
+}
+async function loadComputerizedExams() {
+  const grade = document.getElementById("studentExamGrade").value;
+  const list = document.getElementById("studentExamList");
+
+  if (!grade) {
+    list.textContent = "يرجى اختيار الصف الدراسي أولاً.";
+    return;
+  }
+
+  list.innerHTML = "<p>جارٍ تحميل الامتحانات...</p>";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "get_student_computerized_exams",
+      { p_grade: grade }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تحميل الامتحانات.");
+    }
+
+    const exams = data.exams || [];
+
+    if (exams.length === 0) {
+      list.innerHTML = '<div class="empty">لا توجد امتحانات منشورة لهذا الصف حالياً.</div>';
+      return;
+    }
+
+    list.innerHTML = "";
+
+    exams.forEach(exam => {
+      const card = document.createElement("div");
+      card.className = "exam-card";
+
+      const title = document.createElement("h3");
+      title.textContent = exam.title;
+
+      const details = document.createElement("p");
+      details.textContent =
+        `المادة: ${exam.subject} | المدة: ${exam.duration_minutes} دقيقة`;
+
+      card.append(title, details);
+
+const enterButton = document.createElement("button");
+enterButton.className = "btn gold";
+enterButton.textContent = "دخول الامتحان";
+
+enterButton.onclick = () => {
+  document.getElementById("studentExamLogin").classList.remove("hidden");
+
+  document.getElementById("studentExamLogin").dataset.examId = exam.id;
+};
+
+card.appendChild(enterButton);
+      list.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("خطأ تحميل امتحانات الطالب:", error);
+    list.textContent = "حدث خطأ أثناء تحميل الامتحانات: " + error.message;
+  }
+}
+
+async function openExamQuestions(examId) {
+  const area = document.getElementById("createExamArea");
+
+  area.classList.remove("hidden");
+  area.innerHTML = "<p>جارٍ تحميل أسئلة الامتحان...</p>";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "get_teacher_exam_questions",
+      { p_exam_id: examId }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تحميل الأسئلة.");
+    }
+
+    const questions = data.questions || [];
+
+    area.innerHTML = `
+      <h3>إدارة أسئلة الامتحان</h3>
+      <p>عدد الأسئلة: ${questions.length}</p>
+      <div id="examQuestionsList"></div>
+      <button class="btn gold" onclick="showAddQuestionForm('${examId}')">
+        + إضافة سؤال جديد
+      </button>
+      <button class="btn" onclick="document.getElementById('createExamArea').classList.add('hidden')">
+        إغلاق
+      </button>
+    `;
+
+    const list = document.getElementById("examQuestionsList");
+
+    if (questions.length === 0) {
+      list.textContent = "لا توجد أسئلة في هذا الامتحان حتى الآن.";
+      return;
+    }
+
+    questions.forEach((question, index) => {
+      const item = document.createElement("div");
+      item.className = "exam-question";
+
+      const heading = document.createElement("h4");
+      heading.textContent = `السؤال ${index + 1}: ${question.question_text}`;
+
+      const marks = document.createElement("p");
+      marks.textContent = `العلامة: ${question.marks}`;
+
+      item.append(heading, marks);
+      list.appendChild(item);
+    });
+
+ } catch (error) {
+  console.error("تفاصيل الخطأ:", {
+    message: error.message,
+    details: error.details,
+    hint: error.hint,
+    code: error.code
+  });
+  area.textContent = "حدث خطأ: " + error.message;
+}
+}
+
+
+let currentManagingExamId = null;
+
+function showAddQuestionForm(examId) {
+  currentManagingExamId = examId;
+
+  const area = document.getElementById("createExamArea");
+
+  area.innerHTML = `
+    <h3>إضافة سؤال جديد</h3>
+
+    <div class="field">
+      <label>نص السؤال</label>
+      <textarea id="questionText" placeholder="اكتب السؤال هنا"></textarea>
+    </div>
+
+    <div class="field">
+      <label>الخيار الأول</label>
+      <input id="option0" type="text">
+    </div>
+
+    <div class="field">
+      <label>الخيار الثاني</label>
+      <input id="option1" type="text">
+    </div>
+
+    <div class="field">
+      <label>الخيار الثالث</label>
+      <input id="option2" type="text">
+    </div>
+
+    <div class="field">
+      <label>الخيار الرابع</label>
+      <input id="option3" type="text">
+    </div>
+
+    <div class="field">
+      <label>الإجابة الصحيحة</label>
+      <select id="correctOption">
+        <option value="0">الخيار الأول</option>
+        <option value="1">الخيار الثاني</option>
+        <option value="2">الخيار الثالث</option>
+        <option value="3">الخيار الرابع</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>علامة السؤال</label>
+      <input id="questionMark" type="number" min="0.1" step="0.1" value="1">
+    </div>
+
+    <button class="btn gold" onclick="saveExamQuestion()">
+      حفظ السؤال
+    </button>
+
+    <button class="btn" onclick="openExamQuestions(currentManagingExamId)">
+      العودة للأسئلة
+    </button>
+  `;
+}
+
+async function saveExamQuestion() {
+  const questionText = document.getElementById("questionText").value.trim();
+
+  const options = [
+    document.getElementById("option0").value.trim(),
+    document.getElementById("option1").value.trim(),
+    document.getElementById("option2").value.trim(),
+    document.getElementById("option3").value.trim()
+  ];
+
+  const correctOption = Number(
+    document.getElementById("correctOption").value
+  );
+
+  const mark = Number(
+    document.getElementById("questionMark").value
+  );
+
+  if (!questionText || options.some(option => !option)) {
+    alert("يرجى كتابة السؤال وجميع الخيارات الأربعة.");
+    return;
+  }
+
+  if (!mark || mark <= 0 || !Number.isFinite(mark)) {
+    alert("يرجى إدخال علامة صحيحة أكبر من صفر.");
+    return;
+  }
+
+  const saveButton = document.querySelector(
+    "#createExamArea button.btn.gold"
+  );
+
+  saveButton.disabled = true;
+  saveButton.textContent = "جارٍ الحفظ...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "add_computerized_exam_question",
+      {
+        p_exam_id: currentManagingExamId,
+        p_question_text: questionText,
+        p_options: options,
+        p_correct_option: correctOption,
+        p_mark: mark,
+        p_question_order:
+          document.querySelectorAll("#examQuestionsList .exam-question").length + 1
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذرت إضافة السؤال.");
+    }
+
+    alert("تمت إضافة السؤال بنجاح.");
+
+    await openExamQuestions(currentManagingExamId);
+    await loadTeacherExams();
+
+  } catch (error) {
+    console.error("خطأ إضافة السؤال:", error);
+    alert("حدث خطأ: " + error.message);
+
+    saveButton.disabled = false;
+    saveButton.textContent = "حفظ السؤال";
+  }
+}
+
+function showCreateExamForm() {
+  const area = document.getElementById("createExamArea");
+
+  area.classList.remove("hidden");
+
+  area.innerHTML = `
+    <h3>إنشاء امتحان جديد</h3>
+
+    <div class="field">
+      <label>عنوان الامتحان</label>
+      <input id="newExamTitle" type="text" placeholder="مثال: امتحان منتصف الفصل">
+    </div>
+
+    <div class="field">
+      <label>الصف الدراسي</label>
+      <select id="newExamGrade">
+        <option value="">اختر الصف</option>
+        <option>الصف السابع</option>
+        <option>الصف الثامن</option>
+        <option>الصف التاسع</option>
+        <option>الصف العاشر</option>
+        <option>الصف الحادي عشر</option>
+        <option>الصف الثاني عشر - المسار الصحي</option>
+        <option>الصف الثاني عشر - المسار القانوني</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>المادة الدراسية</label>
+      <input id="newExamSubject" type="text" placeholder="مثال: الكيمياء">
+    </div>
+
+    <div class="field">
+      <label>مدة الامتحان بالدقائق</label>
+      <input id="newExamDuration" type="number" min="1" placeholder="مثال: 45">
+    </div>
+
+    <div class="field">
+      <label>كلمة مرور الامتحان</label>
+      <input id="newExamPassword" type="password" placeholder="أدخل كلمة المرور">
+    </div>
+
+    <div class="field">
+      <label>عدد الأسئلة في الصفحة الواحدة</label>
+      <input id="newExamQuestionsPerPage" type="number" min="1" value="5">
+    </div>
+
+    <div class="field">
+      <label>
+        <input id="newExamShuffleQuestions" type="checkbox" checked>
+        خلط ترتيب الأسئلة عشوائيًا
+      </label>
+    </div>
+
+    <div class="field">
+      <label>
+        <input id="newExamShuffleOptions" type="checkbox" checked>
+        خلط ترتيب الخيارات عشوائيًا
+      </label>
+    </div>
+
+    <button class="btn gold" onclick="createComputerizedExam()">
+      حفظ بيانات الامتحان
+    </button>
+
+    <button class="btn" onclick="document.getElementById('createExamArea').classList.add('hidden')">
+      إلغاء
+    </button>
+  `;
+}
+
+async function createComputerizedExam() {
+  const title = document.getElementById("newExamTitle").value.trim();
+  const grade = document.getElementById("newExamGrade").value;
+  const subject = document.getElementById("newExamSubject").value.trim();
+  const duration = Number(document.getElementById("newExamDuration").value);
+  const password = document.getElementById("newExamPassword").value;
+  const questionsPerPage = Number(
+    document.getElementById("newExamQuestionsPerPage").value
+  );
+
+  const shuffleQuestions =
+    document.getElementById("newExamShuffleQuestions").checked;
+
+  const shuffleOptions =
+    document.getElementById("newExamShuffleOptions").checked;
+
+  if (!title || !grade || !subject || !duration || !password) {
+    alert("يرجى تعبئة جميع الحقول.");
+    return;
+  }
+
+  if (duration <= 0 || questionsPerPage <= 0) {
+    alert("يرجى إدخال مدة وعدد أسئلة صحيحين.");
+    return;
+  }
+
+  if (password.trim().length < 4) {
+    alert("كلمة المرور يجب ألا تقل عن 4 أحرف.");
+    return;
+  }
+
+  const saveButton = document.querySelector(
+    "#createExamArea button.btn.gold"
+  );
+
+  saveButton.disabled = true;
+  saveButton.textContent = "جارٍ الحفظ...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "create_computerized_exam",
+      {
+        p_title: title,
+        p_grade: grade,
+        p_subject: subject,
+        p_duration_minutes: duration,
+        p_password: password,
+        p_questions_per_page: questionsPerPage,
+        p_shuffle_questions: shuffleQuestions,
+        p_shuffle_options: shuffleOptions
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر إنشاء الامتحان.");
+    }
+
+    alert("تم إنشاء الامتحان بنجاح.");
+    document.getElementById("createExamArea").classList.add("hidden");
+
+    await loadTeacherExams();
+
+  } catch (error) {
+    console.error("خطأ إنشاء الامتحان:", error);
+    alert("حدث خطأ: " + error.message);
+
+    saveButton.disabled = false;
+    saveButton.textContent = "حفظ بيانات الامتحان";
+  }
+}
+
+/* المنشورات */
+async function loadStudentPosts(){
+  const homeworkBox=document.getElementById("homeworkPosts");
+  const examsBox=document.getElementById("examPosts");
+  const announcementsBox=document.getElementById("announcementPosts");
+
+  const {data,error}=await supabaseClient
+    .from("school_posts")
+    .select("post_type,title,content,target_grade,subject,due_date,created_at")
+    .eq("published",true)
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    [homeworkBox,examsBox,announcementsBox].forEach(box=>{
+      box.innerHTML='<div class="empty">تعذر تحميل البيانات. تحقق من الاتصال والصلاحيات.</div>';
+    });
+    return;
+  }
+
+  homeworkBox.innerHTML="";
+  examsBox.innerHTML="";
+  announcementsBox.innerHTML="";
+
+  let homeworkCount=0,examCount=0,noticeCount=0;
+
+  function addPost(box,post){
+    const item=document.createElement("article");
+    item.className="post-item";
+
+    const title=document.createElement("strong");
+    title.textContent=post.title||"منشور";
+    const details=document.createElement("p");
+    details.textContent=post.content||"";
+    const info=document.createElement("small");
+    info.textContent=[
+      post.target_grade||"جميع الصفوف",
+      post.subject||"",
+      post.due_date?"الموعد: "+post.due_date:""
+    ].filter(Boolean).join(" — ");
+
+    item.append(title,details,info);
+    box.appendChild(item);
+  }
+
+  (data||[]).forEach(post=>{
+    if(post.post_type==="homework"){
+      homeworkCount++;addPost(homeworkBox,post);
+    }else if(post.post_type==="exam"){
+      examCount++;addPost(examsBox,post);
+    }else if(post.post_type==="announcement"){
+      noticeCount++;addPost(announcementsBox,post);
+    }
+  });
+
+  if(!homeworkCount)homeworkBox.innerHTML='<div class="empty">لا توجد واجبات منشورة حاليًا.</div>';
+  if(!examCount)examsBox.innerHTML='<div class="empty">لا توجد امتحانات منشورة حاليًا.</div>';
+  if(!noticeCount)announcementsBox.innerHTML='<div class="empty">لا توجد إعلانات منشورة حاليًا.</div>';
+
+  document.getElementById("homeworkCount").textContent=homeworkCount;
+  document.getElementById("examCount").textContent=examCount;
+  document.getElementById("noticeCount").textContent=noticeCount;
+}
+
+/* جدول مواعيد الاختبارات */
+async function loadExamSchedule(){
+  const head=document.getElementById("examScheduleHead");
+  const tbody=document.getElementById("examScheduleBody");
+  const addButton=document.getElementById("addExamDateButton");
+
+  addButton.style.display=isTeacher?"inline-block":"none";
+
+  const {data,error}=await supabaseClient
+    .from("exam_schedule_cells")
+    .select("*")
+    .order("exam_date",{ascending:true});
+
+  if(error){
+    console.error(error);
+    tbody.innerHTML='<tr><td>تعذر تحميل الجدول.</td></tr>';
+    return;
+  }
+
+  const dates=[...new Set((data||[]).map(x=>x.exam_date))];
+  document.getElementById("dateCount").textContent=dates.length;
+
+  head.innerHTML="";
+  tbody.innerHTML="";
+
+  const header=document.createElement("tr");
+  const first=document.createElement("th");
+  first.textContent="الصف";
+  header.appendChild(first);
+
+  dates.forEach(date=>{
+    const th=document.createElement("th");
+    const label=document.createElement("div");
+    label.textContent=new Date(date+"T00:00:00").toLocaleDateString("ar-JO");
+    th.appendChild(label);
+
+    if(isTeacher){
+      const edit=document.createElement("button");
+      edit.className="btn secondary";
+      edit.textContent="✏️";
+      edit.style.marginTop="6px";
+      edit.onclick=()=>editExamDate(date);
+      th.appendChild(edit);
+    }
+    header.appendChild(th);
+  });
+  head.appendChild(header);
+
+  if(!dates.length){
+    tbody.innerHTML='<tr><td colspan="2" class="empty">لا توجد مواعيد اختبارات مضافة حاليًا.</td></tr>';
+    return;
+  }
+
+  GRADES.forEach(grade=>{
+    const row=document.createElement("tr");
+    const gradeCell=document.createElement("th");
+    gradeCell.textContent=grade;
+    row.appendChild(gradeCell);
+
+    dates.forEach(date=>{
+      const cell=document.createElement("td");
+      const record=(data||[]).find(x=>x.grade===grade&&x.exam_date===date);
+
+      if(isTeacher){
+        const input=document.createElement("input");
+        input.type="text";
+        input.placeholder="اسم المادة";
+        input.value=record?.subject||"";
+        let timer;
+
+        input.addEventListener("input",()=>{
+          clearTimeout(timer);
+          timer=setTimeout(async()=>{
+            const {error}=await supabaseClient
+              .from("exam_schedule_cells")
+              .upsert({
+                grade,
+                exam_date:date,
+                subject:input.value.trim()
+              },{onConflict:"grade,exam_date"});
+            if(error){
+              console.error(error);
+              alert("تعذر حفظ المادة. تحقق من الصلاحيات.");
+            }
+          },700);
+        });
+        cell.appendChild(input);
+      }else{
+        cell.textContent=record?.subject||"—";
+      }
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
+  });
+}
+
+/* إضافة تاريخ */
+document.getElementById("addExamDateButton").addEventListener("click",async()=>{
+  if(!isTeacher)return;
+  const date=prompt("أدخل تاريخ الامتحان بصيغة YYYY-MM-DD:");
+  if(!date)return;
+
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){
+    alert("صيغة التاريخ غير صحيحة.");
+    return;
+  }
+
+  const records=GRADES.map(grade=>({
+    grade,exam_date:date,subject:""
+  }));
+
+  const {error}=await supabaseClient
+    .from("exam_schedule_cells")
+    .upsert(records,{
+      onConflict:"grade,exam_date",
+      ignoreDuplicates:true
+    });
+
+  if(error){
+    console.error(error);
+    alert("تعذر إضافة التاريخ.");
+    return;
+  }
+  await loadExamSchedule();
+});
+
+/* تعديل التاريخ */
+async function editExamDate(oldDate){
+  if(!isTeacher)return;
+  const newDate=prompt("أدخل التاريخ الجديد بصيغة YYYY-MM-DD:",oldDate);
+  if(!newDate||newDate===oldDate)return;
+
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(newDate)){
+    alert("صيغة التاريخ غير صحيحة.");
+    return;
+  }
+
+  const {error}=await supabaseClient
+    .from("exam_schedule_cells")
+    .update({exam_date:newDate})
+    .eq("exam_date",oldDate);
+
+  if(error){
+    console.error(error);
+    alert("تعذر تعديل التاريخ. ربما يوجد تاريخ آخر مسجل بهذا اليوم.");
+    return;
+  }
+  alert("تم تعديل التاريخ بنجاح.");
+  await loadExamSchedule();
+}
+
+/* نشر منشور المعلم */
+document.getElementById("postForm").addEventListener("submit",async function(event){
+  event.preventDefault();
+  if(!isTeacher||!currentUser){
+    alert("يجب تسجيل الدخول كمعلم أولًا.");
+    return;
+  }
+
+  const message=document.getElementById("postMessage");
+  const button=document.getElementById("publishButton");
+  button.disabled=true;
+  message.textContent="جارٍ حفظ المنشور...";
+
+  try{
+    const {error}=await supabaseClient.from("school_posts").insert({
+      post_type:document.getElementById("postType").value,
+      title:document.getElementById("postTitle").value.trim(),
+      content:document.getElementById("postContent").value.trim(),
+      target_grade:document.getElementById("postGrade").value||null,
+      subject:document.getElementById("postSubject").value.trim()||null,
+      due_date:document.getElementById("postDueDate").value||null,
+      published:true,
+      created_by:currentUser.id
+    });
+
+    if(error){
+      console.error(error);
+      message.textContent="تعذر النشر. تحقق من إعدادات الصلاحيات في Supabase.";
+      return;
+    }
+
+    message.textContent="تم نشر المنشور بنجاح.";
+    this.reset();
+    await loadStudentPosts();
+  }catch(error){
+    console.error(error);
+    message.textContent="حدث خطأ أثناء النشر.";
+  }finally{
+    button.disabled=false;
+  }
+});
+
+document.getElementById("year").textContent=new Date().getFullYear();
+</script>
+
+</body>
+</html>
